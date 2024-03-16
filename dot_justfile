@@ -1,0 +1,44 @@
+# vim: set ft=make :
+
+
+# List recipes
+list:
+	just --list
+
+
+# Update system
+update-system:
+	sudo distrobox-host-exec rpm-ostree update
+   
+
+# Update system
+update-flatpaks:
+	sudo distrobox-host-exec flatpak update -y
+
+
+# Update Distrobox containers
+update-containers:
+	distrobox-host-exec distrobox upgrade -a
+
+
+# Update device firmware
+[no-exit-message]
+update-firmware:
+	sudo distrobox-host-exec fwupdmgr --force refresh
+	sudo distrobox-host-exec fwupdmgr get-updates
+	sudo distrobox-host-exec fwupdmgr update
+
+
+# Clean up system
+clean-system:
+	sudo distrobox-host-exec rpm-ostree cleanup -bm
+	sudo distrobox-host-exec flatpak uninstall --unused -y
+	distrobox-host-exec podman system prune -a
+
+
+# Update Distrobox
+update-distrobox:
+	curl -s https://raw.githubusercontent.com/89luca89/distrobox/main/install | sudo distrobox-host-exec sh
+
+# Update everything
+update-everything: update-system update-flatpaks update-containers update-distrobox
