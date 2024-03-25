@@ -1,0 +1,60 @@
+# vim: set ft=make :
+
+
+# List recipes
+list:
+	just --list
+
+
+
+# Update system
+update-system:
+	sudo rpm-ostree update
+   
+
+# Update system
+update-flatpaks:
+	sudo flatpak update -y
+
+
+# Update Distrobox containers
+update-containers:
+	distrobox upgrade -a
+
+
+# Update device firmware
+[no-exit-message]
+update-firmware:
+	sudo fwupdmgr --force refresh
+	sudo fwupdmgr get-updates
+	sudo fwupdmgr update
+
+
+# Update Nix
+update-homebrew:
+	brew update
+	brew upgrade
+
+
+# Clean up system
+clean-system:
+	podman system prune -a
+	sudo flatpak uninstall --unused -y
+	sudo rpm-ostree cleanup -bm
+	brew autoremove
+	brew cleanup
+
+
+# Update DevPod
+update-devpod:
+	sudo sh /usr/local/share/devpod/uninstall_devpod.sh
+	mkdir -p /tmp/devpod
+	wget -P /tmp/devpod https://github.com/loft-sh/devpod/releases/latest/download/DevPod_linux_x86_64.tar.gz
+	tar xf /tmp/devpod/DevPod_linux_x86_64.tar.gz -C /tmp/devpod
+	sudo cp -r /tmp/devpod/usr/* /usr/local/
+	find /tmp/devpod/usr -type f | sudo tee /usr/local/share/devpod/uninstall_devpod.sh > /dev/null
+	sudo sed -i 's/\/tmp\/devpod\/usr/sudo rm \/usr\/local\//g' /usr/local/share/devpod/uninstall_devpod.sh
+	rm -r /tmp/devpod
+
+# Update everything
+update-everything: update-system update-flatpaks update-containers update-homebrew update-devpod
