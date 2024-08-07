@@ -1,0 +1,51 @@
+# vim: set ft=make :
+
+
+# List recipes
+list:
+	just -g --list
+
+# Stop if commands are invoked in container
+[no-exit-message]
+_check_container:
+	#!/usr/bin/env bash
+	set -euo pipefail
+	if [[ -f /run/.containerenv ]]
+	then
+		echo "ERROR: Please run command on host"
+		exit 1
+	fi
+        
+
+# Update system
+update-system: _check_container
+	sudo rpm-ostree upgrade
+   
+
+# Update system
+update-flatpaks: _check_container
+	sudo flatpak update -y
+
+
+# Update Distrobox containers
+update-distrobox-containers: _check_container  
+	distrobox upgrade -a
+
+
+# Update device firmware
+[no-exit-message]
+update-firmware: _check_container
+	sudo fwupdmgr --force refresh
+	sudo fwupdmgr get-updates
+	sudo fwupdmgr update
+
+
+# Clean up system
+clean-system: _check_container
+	sudo rpm-ostree cleanup -bm
+	sudo flatpak uninstall --unused -y
+	distrobox-host-exec podman system prune -a
+
+
+# Update everything
+update: update-system update-flatpaks update-distrobox-containers

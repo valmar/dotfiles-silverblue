@@ -1,0 +1,16 @@
+Host *vlmcloud.net
+	IdentityFile ~/.ssh/id_rsa_do
+
+Host *github.com
+	IdentityFile ~/.ssh/id_ed25519_gh
+
+Host s3dflogin.slac.stanford.edu
+	Hostname s3dflogin.slac.stanford.edu
+
+Host psana.sdf.stanford.edu
+        Hostname psana
+        ProxyJump s3dflogin.slac.stanford.edu
+
+Host sdfiana006.sdf.stanford.edu
+        Hostname sdfiana006
+        ProxyJump s3dflogin.slac.stanford.edu
