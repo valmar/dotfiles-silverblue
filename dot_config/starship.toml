@@ -1,3 +1,5 @@
+format = '$username$hostname$container$all'
+
 [aws]
 format = '\[[$symbol($profile)(\($region\))(\[$duration\])]($style)\]'
 
@@ -20,6 +22,9 @@ format = '\[[$symbol($version)]($style)\]'
 [conda]
 format = '\[[$symbol$environment]($style)\]'
 
+[container]
+format = '[\[$name\]]($style) '
+
 [crystal]
 format = '\[[$symbol($version)]($style)\]'
 
@@ -33,7 +38,7 @@ format = '\[[$symbol($version)]($style)\]'
 format = '\[[$symbol($version)]($style)\]'
 
 [directory]
-format = '[$path]($style)[$read_only]($read_only_style) '
+format = 'in [$path]($style)[$read_only]($read_only_style) '
 
 [docker_context]
 format = '\[[$symbol$context]($style)\]'
@@ -79,7 +84,7 @@ format = '\[[$symbol($version)]($style)\]'
 
 [hostname]
 ssh_only = false
-format = '[$ssh_symbol$hostname]($style) in '
+format = '[$ssh_symbol$hostname]($style) '
 
 [haxe]
 format = '\[[$symbol($version)]($style)\]'
