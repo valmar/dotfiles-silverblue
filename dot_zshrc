@@ -103,30 +103,44 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-if [[ ! -f /run/.containerenv ]]
+# Homebrew
+[[ -d /home/linuxbrew/.linuxbrew ]] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+# Atuin
+if command -v atuin 2>&1 >/dev/null
 then
-	# Homebrew
-	[[ -d /home/linuxbrew/.linuxbrew ]] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-	
-	# Atuin
-	eval "$(atuin init zsh --disable-up-arrow)"
+        eval "$(atuin init zsh --disable-up-arrow)"
+fi
 
+# Direnv
+if command -v direnv 2>&1 >/dev/null
+then
+        eval "$(direnv hook zsh)"
+fi
 
-	# Just
-	alias just='just -g'
+# Just
+if command -v just 2>&1 >/dev/null
+then
+        alias just='just -g'
+fi
 
+# Neovim
+if command -v nvim 2>&1 >/dev/null
+then
+        alias vi='nvim'
+        alias vim='nvim'
+        alias vimdiff='nvim'
+        export EDITOR="/home/linuxbrew/.linuxbrew/bin/nvim"
+fi
 
-	# Neovim
-	alias vi='nvim'
-	alias vim='nvim'
-	alias vimdiff='nvim'
-	export EDITOR="/home/linuxbrew/.linuxbrew/bin/nvim"
+# Starship
+if command -v starship 2>&1 >/dev/null
+then
+        eval "$(starship init zsh)"
+fi
 
-
-	# Starship
-	eval "$(starship init zsh)"
-
-
-	# Zoxide
-	eval "$(zoxide init zsh)"
+# Zoxide
+if command -v zoxide 2>&1 >/dev/null
+then
+        eval "$(zoxide init --cmd cd zsh)"
 fi
