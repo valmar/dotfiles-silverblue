@@ -1,0 +1,9 @@
+Host *github.com
+	IdentityFile ~/.ssh/id_ed25519_gh
+
+Host psana.sdf.stanford.edu
+        Hostname psana
+        ProxyJump s3dflogin.slac.stanford.edu
+
+Host sdfiana*
+        ProxyJump s3dflogin.slac.stanford.edu

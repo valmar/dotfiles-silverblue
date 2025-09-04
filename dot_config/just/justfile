@@ -1,0 +1,42 @@
+# vim: set ft=make :
+
+
+# List recipes
+list:
+	just -g --list
+
+
+# Update firmware
+update-firmware:
+	-flatpak-spawn --host sudo -S bash -c "fwupdmgr --force refresh -y 2>/dev/null  && fwupdmgr get-updates -y 2>/dev/null && fwupdmgr updatei -y 2>/dev/null"
+
+
+# Update rpm-ostree
+update-rpm-ostree: 
+	flatpak-spawn --host sudo -S rpm-ostree update
+
+
+# Update flatpaks
+update-flatpaks:
+	flatpak-spawn --host sudo -S bash -c "flatpak update -y && flatpak remove --unused -y"
+
+
+# Update toolbox container
+update-toolbox-container:
+	flatpak-spawn --host toolbox run --container toolbox sudo dnf update -y
+
+
+# Update distrobox container
+update-distrobox-containers:
+	flatpak-spawn --host distrobox upgrade -a
+
+
+# Clean up system
+clean-system:
+	sudo rpm-ostree cleanup -bm
+	sudo flatpak remove --unused -y
+	podman system prune -a -f
+
+
+# Update everything
+update-system: update-firmware update-rpm-ostree update-flatpaks update-toolbox-container update-distrobox-containers

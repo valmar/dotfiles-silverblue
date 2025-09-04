@@ -1,0 +1,27 @@
+if [[ -f "/run/.toolboxenv" ]]; then
+  TOOLBOX_NAME=$(cat /run/.containerenv | grep -oP "(?<=name=\")[^\";]+")
+  if [[ "${TOOLBOX_NAME}" == "toolbox" ]]; then
+
+    # Atuin
+    eval "$(atuin init zsh --disable-up-arrow)"
+
+    # Direnv
+    eval "$(direnv hook zsh)"
+
+    # Just
+    alias gjust='just -g'
+
+    # Neoyvim
+    alias vi='nvim'
+    alias vim='nvim'
+    alias vimdiff='nvim'
+    export EDITOR='nvim'
+    alias lazyvim='NVIM_APPNAME=nvim-lazyvim nvim'
+
+    # Starship
+    eval "$(starship init zsh)"
+
+    # Zoxide
+    eval "$(zoxide init --cmd cd zsh)"
+  fi
+fi

@@ -1,0 +1,9 @@
+if [[ -f "/run/.toolboxenv" ]]; then
+  TOOLBOX_NAME=$(cat /run/.containerenv | grep -oP "(?<=name=\")[^\";]+")
+  if [[ "${TOOLBOX_NAME}" == "toolbox" ]]; then
+    if [[ $(ps --no-header --pid=$PPID --format=comm) != "zsh" && -z ${BASH_EXECUTION_STRING} && -x "/bin/zsh" ]]; then
+      shopt -q login_shell && LOGIN_OPTION='--login' || LOGIN_OPTION=''
+      exec zsh $LOGIN_OPTION
+    fi
+  fi
+fi
